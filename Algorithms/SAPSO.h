@@ -108,9 +108,9 @@ public:
 	SAPSO(int iteraciones,vector<double> & matrix,vector<double> & matrix2,std::vector<int> Cola,std::vector<int> & npe, std::vector<int> & Vmips);
 	//~PSO();
 	void mostrar_ParticulaSAPSOs();
-	vector<Num> run();
+	vector<int> run();
 	vector<int> ValorX();
-	double Function(vector<Num> & x);
+	double Function(vector<int> & x);
 	void llamadita();
 
 	ParticulaSAPSO gBest;
@@ -146,7 +146,7 @@ void SAPSO::llamadita(){
 
 
 
-double SAPSO::Function(vector<Num> & x){
+double SAPSO::Function(vector<int> & x){
 	double maxQ=0;
 	double tmpQ;
 	for (int j = 0; j < npe.size(); ++j)
@@ -200,7 +200,7 @@ void SAPSO::mostrar_ParticulaSAPSOs(){
 
 }
 
-vector<Num> SAPSO::run(){
+vector<int> SAPSO::run(){
 	Num w,d1,d2,rand1,rand2;
 	
 	for (int iteraciones = 0; iteraciones < cantidad_de_iteraciones; ++iteraciones)
@@ -300,9 +300,9 @@ vector<Num> SAPSO::run(){
 		fitnessant=gBest.fitness;
 		//mostrar_ParticulaSAPSOs();
 	}
-		printf("Mejor Global: [");
-		mostrar_ParticulaSAPSO_x(gBest);
-		printf("]\n");
+		//printf("Mejor Global: [");
+		//mostrar_ParticulaSAPSO_x(gBest);
+		//printf("]\n");
 		printf("Costo del mejor Global: %lf \n\n",gBest.fitness );
 	return gBest.x;
 }

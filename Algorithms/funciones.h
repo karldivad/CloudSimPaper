@@ -12,7 +12,45 @@
 
 using namespace std;
 
-typedef int Num;
+typedef double Num;
+
+typedef struct {
+	vector<int> ciudades;
+	Num costo;
+}Hormiga;
+
+
+
+struct Comp
+{
+   bool operator()(Hormiga & s1, Hormiga & s2)
+   {
+       	return s1.costo<s2.costo;
+   }
+}; ////
+
+
+
+
+void mostrar_matriz(vector<vector<Num>> & matriz);
+
+
+
+bool mypredicate (int i, int j) {
+  return (i==j);
+}
+
+void mostrar_matriz(vector<vector<Num>> & matriz){
+	for (int i = 0; i < matriz.size(); ++i)
+	{
+		for (int j = 0; j < matriz[i].size(); ++j)
+		{
+			cout<<matriz[i][j]<<"    ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
 
 
 bool iguales(vector<int>& a,std::vector<int > & b){

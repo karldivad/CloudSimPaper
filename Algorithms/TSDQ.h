@@ -152,9 +152,9 @@ std::vector<std::vector<int>> TSDQ::run(){
 		}
 	}
 	ColaSplit.push_back(MiniCola);
-	cout<<ColaSplit.size()<<endl;
+	//cout<<ColaSplit.size()<<endl;
 	MiniCola.clear();
-	mostrarColaSplit();
+	//mostrarColaSplit();
 	return ColaSplit;
 }
 

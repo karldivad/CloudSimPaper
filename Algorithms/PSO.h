@@ -21,7 +21,7 @@ using namespace std;
 typedef struct {
 	vector<tuple<int,int>> v;
 	vector<int> x;
-	double fitness;
+	Num fitness;
 }Particula;
 
 void mostrar_particula_x(Particula p){
@@ -113,20 +113,20 @@ public:
 	PSO(int iteraciones,vector<double> & matrix);
 	//~PSO();
 	void mostrar_particulas();
-	vector<Num> run();
+	vector<int> run();
 	vector<int> ValorX();
-	double Function(vector<Num> & x);
+	double Function(vector<int> & x);
 	void llamadita();
 
 	Particula gBest;
 	Particula lBest;
 
-	vector<double> Mciudades;
+	vector<Num> Mciudades;
 
 	vector<Particula> particulas;
 	vector<Particula> pBest;
 
-	int cantidad_de_iteraciones=1000;
+	int cantidad_de_iteraciones=100;
 	int tam_poblacion=200;
 	//int dimensiones=2;
 };
@@ -144,7 +144,7 @@ void PSO::llamadita(){
 	cout<< sum/v.size()<<endl;
 }
 
-double PSO::Function(vector<Num> & x){
+double PSO::Function(vector<int> & x){
 	double sum=0;
 	for (int i = 0; i < x.size()-1; ++i)
 	{
@@ -159,7 +159,7 @@ vector<int> PSO::ValorX(){
 	
 	vector<int> ciudad;
 	while(ciudad.size()!=Mciudades.size()){
-		Num aleatorio=random(Mciudades.size());
+		int aleatorio=random(Mciudades.size());
 		auto it=find (ciudad.begin(), ciudad.end(),aleatorio);
 		if (it != ciudad.end()){
 			;
@@ -191,17 +191,17 @@ void PSO::mostrar_particulas(){
 
 }
 
-vector<Num> PSO::run(){
+vector<int> PSO::run(){
 	Num w,d1,d2,rand1,rand2;
 	
 	for (int iteraciones = 0; iteraciones < cantidad_de_iteraciones; ++iteraciones)
 	{
-		printf("Iteracion %d *************\n", iteraciones+1);
+		/*printf("Iteracion %d *************\n", iteraciones+1);
 		printf("Mejor Global: [");
 		mostrar_particula_x(gBest);
 		printf("]\n");
 		printf("Costo del mejor Global: %lf \n\n",gBest.fitness );
-		
+		*/
 		//mostrar_particulas();
 
 		w=random(1);
@@ -229,14 +229,14 @@ vector<Num> PSO::run(){
 		}
 		//mostrar_particulas();
 	}
-		printf("Mejor Global: [");
-		mostrar_particula_x(gBest);
-		printf("]\n");
+		//printf("Mejor Global: [");
+		//mostrar_particula_x(gBest);
+		//printf("]\n");
 		printf("Costo del mejor Global: %lf \n\n",gBest.fitness );
 	return gBest.x;
 }
 
-PSO::PSO(int iteraciones,vector<double> & matrix){
+PSO::PSO(int iteraciones,vector<Num> & matrix){
 	Mciudades=matrix;
 	vector<int> ciudad;
 	
@@ -245,7 +245,7 @@ PSO::PSO(int iteraciones,vector<double> & matrix){
 	for (int i = 0; i < tam_poblacion; ++i)
 	{
 		while(ciudad.size()!=Mciudades.size()){
-			Num aleatorio=random(Mciudades.size());
+			int aleatorio=(int)random(Mciudades.size());
 			auto it=find (ciudad.begin(), ciudad.end(),aleatorio);
 			if (it != ciudad.end()){
 				;

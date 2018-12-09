@@ -108,9 +108,9 @@ public:
 	FLPSO(int iteraciones,vector<double> & matrix,vector<double> & matrix2,std::vector<int> Cola,std::vector<int> & npe, std::vector<int> & Vmips);
 	//~FLPSO();
 	void mostrar_ParticulaFLPSOs();
-	vector<Num> run();
+	vector<int> run();
 	vector<int> ValorX();
-	double Function(vector<Num> & x);
+	double Function(vector<int> & x);
 	void llamadita();
 
 	ParticulaFLPSO gBest;
@@ -143,15 +143,31 @@ void FLPSO::llamadita(){
 	cout<< sum/v.size()<<endl;
 }
 
-double FLPSO::Function(vector<Num> & x){
-	double sum=0;
+double FLPSO::Function(vector<int> & x){
+	double maxQ=0;
+	double tmpQ;
+	for (int j = 0; j < npe.size(); ++j)
+	{
+		tmpQ=0;
+		for (int i = 0; i < x.size(); ++i)
+		{
+			tmpQ+=length[x[i]]/(npe[j]*Vmips[j]);
+		}
+		if (maxQ<tmpQ)
+		{
+			maxQ=tmpQ;
+		}
+	}
+	return maxQ;
+
+	/*double sum=0;
 	for (int i = 0; i < x.size()-1; ++i)
 	{
 		sum+=(Mciudades[x[i]]*(x.size()-i-1));
 		//cout<<matrix[v[i-1]][v[i]]<<endl;
 	}
 	//cout<<endl;
-	return sum/x.size();
+	return sum/x.size();*/
 }
 /*
 double FLPSO::Function(vector<Num> & x){
@@ -201,7 +217,7 @@ void FLPSO::mostrar_ParticulaFLPSOs(){
 
 }
 
-vector<Num> FLPSO::run(){
+vector<int> FLPSO::run(){
 	Num w,d1,d2,rand1,rand2;
 	
 	for (int iteraciones = 0; iteraciones < cantidad_de_iteraciones; ++iteraciones)
@@ -239,9 +255,9 @@ vector<Num> FLPSO::run(){
 		}
 		//mostrar_ParticulaFLPSOs();
 	}
-		printf("Mejor Global: [");
-		mostrar_ParticulaFLPSO_x(gBest);
-		printf("]\n");
+		//printf("Mejor Global: [");
+		//mostrar_ParticulaFLPSO_x(gBest);
+		//printf("]\n");
 		printf("Costo del mejor Global: %lf \n\n",gBest.fitness );
 	return gBest.x;
 }

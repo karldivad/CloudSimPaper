@@ -8,40 +8,23 @@
 #include <algorithm>
 #include <iomanip>
 #include <fstream>
+#include "funciones.h"
 
 using namespace std;
 
-typedef double Num;
 
-void mostrar_matriz(vector<vector<Num>> &);
-
-typedef struct {
-	vector<int> ciudades;
-	Num costo;
-}Hormiga3;
-
-
-
-struct Comp
-{
-   bool operator()(Hormiga3 & s1, Hormiga3 & s2)
-   {
-       	return s1.costo<s2.costo;
-   }
-}; ////
-
-bool mypredicate (int i, int j) {
-  return (i==j);
-}
 
 
 class Colonia3{
 public:
 	Colonia3(vector<vector<Num>> & matriz);
+	Colonia3(int iteraciones, vector<vector<Num>> & v);
+	Colonia3(int iteraciones,int hormigas_cant,vector<vector<Num>> & v);
+	Colonia3(int iteraciones,vector<vector<Num>> & matrix,vector<vector<Num>> & matrix2,std::vector<int> Cola,std::vector<int> & npe, std::vector<int> & Vmips);
 
 	void mostrar_hormigas();
 	Num generar_costo(vector<int> &);
-	void run();
+	vector<int> run();
 
 	int cantidad_de_hormigas=4;
 	Num a=1;
@@ -51,11 +34,18 @@ public:
 	int cantidad_de_iteraciones=1000;
 	int ciudad_inicial=0;
 
+	vector<int> npe;
+	vector<int> Vmips;
+	vector<int> Cola;
+
+
+	vector<std::vector<Num>> length;
+
 	vector<std::vector<Num>> matrixdis;
 	vector<std::vector<Num>> matrixvis;
 	vector<std::vector<Num>> matrixfer;
 
-	vector<Hormiga3> Hormigas;
+	vector<Hormiga> Hormigas;
 
 };
 
@@ -74,9 +64,64 @@ Colonia3::Colonia3(vector<vector<Num>> & v){
 
 }
 
+Colonia3::Colonia3(int iteraciones, vector<vector<Num>> & v){
+	vector<Num> temp;
+	for (int i = 0; i < v.size(); ++i)
+	{
+		temp.push_back(0.0);
+	}
+	for (int i = 0; i < v.size(); ++i)
+	{
+		matrixvis.push_back(temp);
+		matrixfer.push_back(temp);
+	}
+	matrixdis=v;
+	cantidad_de_iteraciones= iteraciones;
 
-void Colonia3::run(){
-	Hormiga3 MEJOR;
+}
+Colonia3::Colonia3(int iteraciones, int hormigas_cant, vector<vector<Num>> & v){
+	vector<Num> temp;
+	for (int i = 0; i < v.size(); ++i)
+	{
+		temp.push_back(0.0);
+	}
+	for (int i = 0; i < v.size(); ++i)
+	{
+		matrixvis.push_back(temp);
+		matrixfer.push_back(temp);
+	}
+	matrixdis=v;
+	cantidad_de_hormigas=hormigas_cant;
+	cantidad_de_iteraciones=iteraciones;
+
+}
+
+Colonia3::Colonia3(int iteraciones,vector<vector<Num>> & matrix,vector<vector<Num>> & matrix2,std::vector<int> Cola,std::vector<int> & npe, std::vector<int> & Vmips){
+	vector<Num> temp;
+	cantidad_de_iteraciones=iteraciones;
+
+	for (int i = 0; i < matrix.size(); ++i)
+	{
+		temp.push_back(0.0);
+	}
+	for (int i = 0; i < matrix.size(); ++i)
+	{
+		matrixvis.push_back(temp);
+		matrixfer.push_back(temp);
+	}
+	matrixdis=matrix;
+	length=matrix2;
+	Cola=Cola;
+	npe=npe;
+	Vmips=Vmips;
+
+}
+
+
+
+
+vector<int> Colonia3::run(){
+	Hormiga MEJOR;
 
 	for (int i = 0; i < matrixdis.size(); ++i)
 	{
@@ -91,21 +136,22 @@ void Colonia3::run(){
 	}
 	for (int iteraciones = 0; iteraciones < cantidad_de_iteraciones; ++iteraciones)
 	{
-		cout<<"ITERACION: "<<iteraciones<<endl;
+		//cout<<"ITERACION: "<<iteraciones<<endl;
 		for (int hs = 0; hs < cantidad_de_hormigas; ++hs)
 		{
-		cout<<"HORMIGA :"<<hs<<endl;
+		//cout<<"HORMIGA :"<<hs<<endl;
 		vector<int> ciudad;
+		ciudad_inicial= (int)random(matrixdis.size());
 		ciudad.push_back(ciudad_inicial);
 		vector<tuple<int,Num>> tn;
 		vector<Num> prob;
 		int pos=ciudad_inicial;
-		mostrar_matriz(matrixvis);
-		mostrar_matriz(matrixfer);
+		//mostrar_matriz(matrixvis);
+		//mostrar_matriz(matrixfer);
 		while(ciudad.size()<matrixdis.size()){
-			cout<<ciudad.size()+1<<" CIUDAD"<<endl;
+			//cout<<ciudad.size()+1<<" CIUDAD"<<endl;
 			if(ciudad.size()==1){
-				cout<<"Ciudad Inicial "<<pos<<endl;	
+			//	cout<<"Ciudad Inicial "<<pos<<endl;	
 			}
 			
 			Num sum=0.0;
@@ -121,22 +167,22 @@ void Colonia3::run(){
 						auto cid=make_tuple(i,pow(matrixfer[pos][i],a)*pow(matrixvis[pos][i],b));
 						tn.push_back(cid);
 						sum+=pow(matrixfer[pos][i],a)*pow(matrixvis[pos][i],b);
-						cout<<pos<<"-"<<i<<": "<<matrixfer[pos][i]*matrixvis[pos][i]<<endl;
+						//cout<<pos<<"-"<<i<<": "<<matrixfer[pos][i]*matrixvis[pos][i]<<endl;
 						//cout<<"Suma: "<<sum<<endl;
 					}
 
 				}
 			}
-			cout<<"Suma: "<<sum<<endl;
+			//cout<<"Suma: "<<sum<<endl;
 			
 
 			for (int i = 0; i < tn.size(); ++i)
 			{
 				prob.push_back(get<1>(tn[i])/sum);
-				cout<<pos<<"-"<<get<0>(tn[i])<<": "<<get<1>(tn[i])/sum<<endl;
+			///	cout<<pos<<"-"<<get<0>(tn[i])<<": "<<get<1>(tn[i])/sum<<endl;
 			}
 			Num aleatorio=(Num)(rand()%10000000)/10000000.0;
-			cout<<"Numero aleatorio para la probabilidad "<<aleatorio<<endl;
+			//cout<<"Numero aleatorio para la probabilidad "<<aleatorio<<endl;
 			Num rango=0;
 			for (int i = 0; i < prob.size(); ++i)
 			{
@@ -148,12 +194,12 @@ void Colonia3::run(){
 			}
 			//cout<<pos<<endl;
 			ciudad.push_back(get<0>(tn[pos]));
-			cout<<"Ciudad Siguiente: "<<get<0>(tn[pos])<<endl;
+			//cout<<"Ciudad Siguiente: "<<get<0>(tn[pos])<<endl;
 			pos=get<0>(tn[pos]);	
 			tn.clear();
 			prob.clear();
 		}
-		Hormiga3 H1;
+		Hormiga H1;
 		H1.ciudades=ciudad;
 		H1.costo=generar_costo(H1.ciudades);
 		Hormigas.push_back(H1);
@@ -162,7 +208,7 @@ void Colonia3::run(){
 
 	}
 	sort (Hormigas.begin(), Hormigas.end(),Comp());
-	mostrar_hormigas();
+	//mostrar_hormigas();
 	if(MEJOR.costo>Hormigas[0].costo or iteraciones==0)	
 		MEJOR=Hormigas[0];
 
@@ -200,19 +246,19 @@ void Colonia3::run(){
 
 		}
 	}
-	mostrar_matriz(matrixfer);
+	////mostrar_matriz(matrixfer);
 	
 	Hormigas.clear();
 	}
-	mostrar_matriz(matrixfer);
-	cout<<"MEJOR HORMIGA"<<endl;
+	////mostrar_matriz(matrixfer);
+	/*cout<<"MEJOR HORMIGA"<<endl;
 	for (int i = 0; i < MEJOR.ciudades.size(); ++i)
 	{
 		cout<<MEJOR.ciudades[i]<<"  "; 
-	}
+	}*/
 	cout<<"Mejor Costo: "<<MEJOR.costo<<endl;
-	mostrar_matriz(matrixfer);
-
+	////mostrar_matriz(matrixfer);
+	return MEJOR.ciudades;
 
 }
 
@@ -241,15 +287,5 @@ void Colonia3::mostrar_hormigas(){
 	cout<<endl;
 }
 
-void mostrar_matriz(vector<vector<Num>> & matriz){
-	for (int i = 0; i < matriz.size(); ++i)
-	{
-		for (int j = 0; j < matriz[i].size(); ++j)
-		{
-			cout<<matriz[i][j]<<"    ";
-		}
-		cout<<endl;
-	}
-	cout<<endl;
-}
+
 #endif	
